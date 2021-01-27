@@ -1,0 +1,23 @@
+
+<div [ngClass]="{'lightTheme': className === 'light', 'darkTheme': className === 'dark' }">
+  <div class="grid-container">
+    <header class="header">
+      <div class="column-8"><h2>Assignment 2</h2></div>
+      <div class="column-4">
+        <div class="toggle_theme">
+          <span>Light</span>
+          <label class="switch">
+            <input type="checkbox" (click)="toggle()" >
+            <span class="slider round"></span>
+          </label>
+          <span>Dark</span>
+        </div>
+      </div>
+    </header>
+    <!-- <div class="menu">Menu</div> -->
+    <div class="main">
+      <router-outlet></router-outlet>
+    </div>  
+    <footer class="footer">Footer</footer>
+  </div>
+</div>
