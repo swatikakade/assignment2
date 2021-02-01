@@ -25,8 +25,10 @@ export class UserService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<any>(`http://localhost:3000/users/authenticate`, { email, password })
+        return this.http.post<any>(`http://localhost:3000/login`, { email, password })
             .pipe(map(user => {
+                console.log(user);
+                alert();
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.userSubject.next(user);
@@ -41,7 +43,7 @@ export class UserService {
     }
 
     register(user: User) {
-        return this.http.post(`http://localhost:3000/users`, user);
+        return this.http.post(`http://localhost:3000/register`, user);
     }
 
     isAuthorized(){

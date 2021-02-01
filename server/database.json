@@ -23,6 +23,10 @@
       "link": "https://en.wikipedia.org/wiki/Technology",
       "category": "technology",
       "user_id": 4
+    },
+    {
+      "email": "hhh@gmail.com",
+      "id": 4
     }
   ],
   "users": [
@@ -41,11 +45,23 @@
       "id": 3
     },
     {
-      "first_name": "sam",
-      "last_name": "sparrow",
-      "email": "ss@gmail.com",
+      "first_name": "sumit",
+      "last_name": "kakade",
+      "email": "sk@gmail.com",
       "password": "123456789",
       "id": 4
+    },
+    {
+      "email": "hhh@gmail.com",
+      "password": "$2a$10$W6.oOvCCgU2C9SJaD485JOzNVuYx2RxMIbFmZjND9jpWrHQ9UQlRG",
+      "id": 5
+    },
+    {
+      "email": "swatikakade200@gmail.com",
+      "password": "$2a$10$UFLaq5qdFGtmZwmVF.z79.LygxFIB1p4/fPwBZJgmpUem7CUykbD.",
+      "first_name": "swati",
+      "last_name": "kakde",
+      "id": 6
     }
   ]
 }
