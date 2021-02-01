@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { UserService } from './_services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +11,12 @@ export class AppComponent {
   public className:string = 'light';
   public show:boolean = false;
   title = 'assignment2';
-  constructor() {}
+  currentUser:any;
+  constructor(private router: Router, private userService: UserService) {}
 
-  ngOnInit(){}
+  ngOnInit(){
+    this.userService.isAuthorized();
+  }
 
   toggle() {
     this.show = !this.show;
@@ -20,5 +25,10 @@ export class AppComponent {
     } else {
       this.className = 'light';
     }
+  }
+
+  logout() {
+    this.userService.logout();
+    this.router.navigate(['/login']);
   }
 }

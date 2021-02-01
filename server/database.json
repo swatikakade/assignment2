@@ -1,7 +1,51 @@
 {
-    "links": [
-        { "id": 1, "title": "Google News", "description": "Google News is a news aggregator service developed by Google. It presents a continuous flow of articles organized from thousands of publishers and magazines. Google News is available as an app on Android, iOS, and the Web. Google released a beta version in September 2002 and the official app in January 2006. Wikipedia", "link": "https://news.google.com/", "category": "NEWS" },
-        { "id": 2, "title": "Food", "description": "Cooking or cookery is the art, science, and craft of using heat to prepare food for consumption. Cooking techniques and ingredients vary widely across the world, from grilling food over an open fire to using electric stoves, to baking in various types of ovens, reflecting unique environmental, economic, and cultural traditions and trends.", "link": "https://en.wikipedia.org/wiki/Cooking", "category": "cooking" },
-        { "id": 3, "title": "Technology", "description": "Technology is the sum of techniques, skills, methods, and processes used in the production of goods or services or in the accomplishment of objectives, such as scientific investigation. Wikipedia", "link": "https://en.wikipedia.org/wiki/Technology", "category": "technology" }
-    ]
+  "links": [
+    {
+      "title": "Google News",
+      "description": "Google News is a news aggregator service developed by Google. It presents a continuous flow of articles organized from thousands of publishers and magazines. Google News is available as an app on Android, iOS, and the Web. Google released a beta version in September 2002 and the official app in January 2006. Wikipedia",
+      "link": "https://news.google.com",
+      "category": "NEWS",
+      "user_id": 2,
+      "id": 1
+    },
+    {
+      "id": 2,
+      "title": "Food",
+      "description": "Cooking or cookery is the art, science, and craft of using heat to prepare food for consumption. Cooking techniques and ingredients vary widely across the world, from grilling food over an open fire to using electric stoves, to baking in various types of ovens, reflecting unique environmental, economic, and cultural traditions and trends.",
+      "link": "https://en.wikipedia.org/wiki/Cooking",
+      "category": "cooking",
+      "user_id": 3
+    },
+    {
+      "id": 3,
+      "title": "Technology",
+      "description": "Technology is the sum of techniques, skills, methods, and processes used in the production of goods or services or in the accomplishment of objectives, such as scientific investigation. Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Technology",
+      "category": "technology",
+      "user_id": 4
+    }
+  ],
+  "users": [
+    {
+      "email": "js@gmail.com",
+      "password": "$2a$10$P/toqr8W.bqi6GmseuZbVudupUGf91sXYlv3E0n0Sxqh2HPOyUUoi",
+      "first_name": "john",
+      "last_name": "smith",
+      "id": 2
+    },
+    {
+      "email": "dv@gmail.com",
+      "password": "$2a$10$Ccw/6w9o9e/f3N5.CEurVeol14ngrmZ/yIJuEhZp/rozgNpcu7Oki",
+      "first_name": "durgesh",
+      "last_name": "v",
+      "id": 3
+    },
+    {
+      "first_name": "sam",
+      "last_name": "sparrow",
+      "email": "ss@gmail.com",
+      "password": "123456789",
+      "id": 4
+    }
+  ]
 }

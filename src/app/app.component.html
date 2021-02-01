@@ -2,15 +2,55 @@
 <div [ngClass]="{'lightTheme': className === 'light', 'darkTheme': className === 'dark' }">
   <div class="grid-container">
     <header class="header">
-      <div class="column-8"><h2>Assignment 2</h2></div>
-      <div class="column-4">
-        <div class="toggle_theme">
-          <span>Light</span>
-          <label class="switch">
-            <input type="checkbox" (click)="toggle()" >
-            <span class="slider round"></span>
-          </label>
-          <span>Dark</span>
+      <div class="head">
+        <div class="column-6"><h2>Assignment 2</h2></div>
+        <div class="column-6"> 
+          <div class="toggle_theme">
+            <span>Light</span>
+            <label class="switch">
+              <input type="checkbox" (click)="toggle()" >
+              <span class="slider round"></span>
+            </label>
+            <span>Dark</span>
+          </div>
+          <div class="loginmenu">
+            <h4 *ngIf="currentUser">Welcome {{currentUser.first_name}} {{currentUser.last_name}}</h4>
+          </div>
+        </div>
+      </div>
+      <div class="top_menu">
+        <div class="column-12">
+          <nav class="nav">
+              <!-- Links -->
+              <ul class="nav-list">
+          
+                <li class="nav-item" routerLinkActive="active" >
+                  <a class="nav-link text-white" [routerLink]="['/']">Home</a>
+                </li>
+          
+                <ng-container  *ngIf="currentUser == null">
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser == null">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'login']">Login</a>
+                  </li>
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser == null">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'register']">Sign Up</a>
+                  </li>
+                </ng-container>
+                
+                <ng-container>
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser != null">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'myprofile']">My Profile</a>
+                  </li>
+                  <li class="nav-item" routerLinkActive="active">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'mylinks']">My Links</a>
+                  </li>
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser != null">
+                    <a class="nav-link text-white" href="#" (click)="logout()">Logout</a>
+                  </li>
+                </ng-container>
+              </ul>
+          </nav>
+
         </div>
       </div>
     </header>

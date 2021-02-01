@@ -1,22 +1,20 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { HomeComponentComponent } from './home-component/home-component.component';
-import { UserComponentComponent } from './user-component/user-component.component';
 import { AppRoutingModule } from './app-routing.module';
-import { SharedComponentComponent } from './shared-component/shared-component.component';
-
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponentComponent,
-    UserComponentComponent,
-    SharedComponentComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule
   ],
