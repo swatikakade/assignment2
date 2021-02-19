@@ -1,7 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { UserService } from '../../_services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { Store, select } from '@ngrx/store';
+import * as fromUserActions from '../../_store/actions/users.actions';
+import { selectedUsers } from "../../_store/selectors/users.selectors";
+import { UserState } from "../../_store/reducers/users.reducers";
+import { User } from 'src/app/_models/user';
+
 
 @Component({
   selector: 'app-list',
@@ -9,19 +17,34 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  users: any;
-  constructor(private userService: UserService, private router:Router) { }
+  errorMessage="";
+  @Input() users: User[] =[];
+  users$: Observable<User[]>
+  @Input() showActions:boolean;
 
-  ngOnInit(): void {
-    this.userService.getAll()
-            .pipe(first())
-            .subscribe(users => this.users = users);
+
+  constructor(private userService: UserService, private router:Router, private store: Store) {
+    // this.users = store.pipe(select('users'));
+    // console.log(this.users);
   }
 
-  logout() {
-      // remove user from local storage and set current user to null
-      localStorage.removeItem('currentUser');
-      this.router.navigate(['/users/login']);
+  ngOnInit(): void {
+    this.store.dispatch(fromUserActions.loadUsers());
+    this.loadUsers();
+  }
+
+  loadUsers(){
+    this.store.select(selectedUsers).subscribe(data=>{
+      this.users = data;
+    })
+    this.users$ = this.store.pipe(select(selectedUsers));
+  }
+
+  confirmDeleteUser(id){
+    if(confirm("Are you sure you want to delete user?")) {
+      this.store.dispatch(fromUserActions.deleteUser({ id }));
+      this.loadUsers();
+    }
   }
 
 }

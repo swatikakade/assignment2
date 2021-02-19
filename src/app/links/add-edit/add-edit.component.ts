@@ -1,9 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ValidatorService } from 'src/app/_services/validator.service';
 import { LinkService } from 'src/app/_services/link.service';
 import { first } from 'rxjs/operators';
+
+import { Store } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
+import { addLink, loadLink, updateLink } from '../../_store/actions/links.actions';
+import { LinkState, linksFeatureKey } from '../../_store/reducers/links.reducers';
+import { selectedLink } from 'src/app/_store/selectors/links.selector';
+import { Link } from 'src/app/_models/link';
+import { NgForm} from '@angular/forms'
 
 @Component({
   selector: 'app-add-edit',
@@ -16,21 +24,28 @@ export class AddEditComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
+  currentUser: any;
+  currentUserId: null;
+  link: any = {};
+
+  categories = ['Food', 'Technology', 'News'];
+  //@Input() public form: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private validatorService: ValidatorService,
-    private linkService: LinkService
+    private linkService: LinkService,
+    private store: Store<LinkState>
   ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
     this.isAddMode = !this.id;
-
     //get current user id
-    var currentUserId = 2;
+    this.currentUser = localStorage.getItem("currentUser")?JSON.parse(localStorage.getItem("currentUser")):null;
+    this.currentUserId = this.currentUser?this.currentUser.id:null;
 
     // validation for url link
     const urlRegex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
@@ -40,13 +55,16 @@ export class AddEditComponent implements OnInit {
         description: ['', Validators.required],
         link:  ['', [Validators.required, Validators.pattern(urlRegex)]],
         category: ['', Validators.required],
-        user_id: [currentUserId, Validators.required]
+        user_id: [this.currentUserId, Validators.required]
     });
 
     if (!this.isAddMode) {
-        this.linkService.getById(this.id)
-            .pipe(first())
-            .subscribe(x => this.form.patchValue(x));
+      this.store.dispatch(loadLink({ id: this.id }));
+      this.store.select(selectedLink).subscribe(link => {
+        if (link != null) {
+          this.form.patchValue(link);
+        }
+      });
     }
   }
 
@@ -60,43 +78,20 @@ export class AddEditComponent implements OnInit {
     if (this.form.invalid) {
         return;
     }
-
     this.loading = true;
+
     if (this.isAddMode) {
-        this.createLink();
+      // add
+      this.store.dispatch(addLink({ Link: this.form.value }));
+      this.router.navigate['/links'];
     } else {
-        this.updateLink();
+      // edit
+      const update: Update<Link> = {
+        id: this.id,
+        changes: this.form.value
+      };
+      this.store.dispatch(updateLink({ Link: update }));
     }
-  }
-
-  private createLink() {
-    this.linkService.add(this.form.value)
-        .pipe(first())
-        .subscribe({
-            next: () => {
-                alert('Link added successfully');
-                this.router.navigate(['users', 'mylinks']);
-            },
-            error: error => {
-                console.log(error);
-                this.loading = false;
-            }
-    });
-  }
-
-  private updateLink() {
-      this.linkService.update(this.id, this.form.value)
-          .pipe(first())
-          .subscribe({
-              next: () => {
-                  alert('Update successful');
-                  this.router.navigate(['users', 'mylinks']);
-              },
-              error: error => {
-                  console.log(error);
-                  this.loading = false;
-              }
-      });
   }
 
 }

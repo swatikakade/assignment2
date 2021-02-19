@@ -1,18 +1,23 @@
 <h1>Users</h1>
-<pre>{{users | json}}</pre>
-<table>
+<div class="error" *ngIf="!users">No users to show.</div>
+<table class="table" *ngIf="users">
     <thead>
         <tr>
-            <th style="width: 30%">First Name</th>
-            <th style="width: 30%">Last Name</th>
-            <th style="width: 30%">Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let user of users">
-            <td>{{user.first_name}}</td>
-            <td>{{user.last_name}}</td>
-            <td>{{user.email}}</td>
+        <tr *ngFor='let user of users'>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.email | uppercase}}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" [routerLink]="['/users', 'edit', user.id]">Edit</button>&nbsp;
+                <button class="btn btn-sm btn-danger" (click)="confirmDeleteUser(user.id)">Delete</button>
+            </td>
         </tr>
     </tbody>
 </table>

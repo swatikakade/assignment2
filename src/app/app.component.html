@@ -1,5 +1,5 @@
 
-<div [ngClass]="{'lightTheme': className === 'light', 'darkTheme': className === 'dark' }">
+<div>
   <div class="grid-container">
     <header class="header">
       <div class="head">
@@ -8,14 +8,14 @@
           <div class="toggle_theme">
             <span>Light</span>
             <label class="switch">
-              <input type="checkbox" (click)="toggle()" >
+              <input type="checkbox" (click)="toggleTheme()" >
               <span class="slider round"></span>
             </label>
             <span>Dark</span>
           </div>
-          <div class="loginmenu">
+          <!-- <div class="loginmenu">
             <h4 *ngIf="currentUser">Welcome {{currentUser.first_name}} {{currentUser.last_name}}</h4>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="top_menu">
@@ -24,28 +24,28 @@
               <!-- Links -->
               <ul class="nav-list">
           
-                <li class="nav-item" routerLinkActive="active" >
+                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" >
                   <a class="nav-link text-white" [routerLink]="['/']">Home</a>
                 </li>
-          
-                <ng-container  *ngIf="currentUser == null">
-                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser == null">
-                    <a class="nav-link text-white" [routerLink]="['/users', 'login']">Login</a>
-                  </li>
-                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser == null">
+                
+                <ng-container  *ngIf="!isLoggedIn">
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="!isLoggedIn">
                     <a class="nav-link text-white" [routerLink]="['/users', 'register']">Sign Up</a>
+                  </li>
+                  <li class="nav-item" routerLinkActive="active"  *ngIf="!isLoggedIn">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'login']">Login</a>
                   </li>
                 </ng-container>
                 
-                <ng-container>
-                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser != null">
-                    <a class="nav-link text-white" [routerLink]="['/users', 'myprofile']">My Profile</a>
-                  </li>
+                <ng-container *ngIf="isLoggedIn">
+                  <!-- <li class="nav-item" routerLinkActive="active"  *ngIf="isLoggedIn">
+                    <a class="nav-link text-white" [routerLink]="['/users', 'edit', currentUser.id]">My Profile</a>
+                  </li> -->
                   <li class="nav-item" routerLinkActive="active">
                     <a class="nav-link text-white" [routerLink]="['/users', 'mylinks']">My Links</a>
                   </li>
-                  <li class="nav-item" routerLinkActive="active"  *ngIf="currentUser != null">
-                    <a class="nav-link text-white" href="#" (click)="logout()">Logout</a>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" (click)="onLogout($event)" href="#">Logout</a>
                   </li>
                 </ng-container>
               </ul>
@@ -57,6 +57,20 @@
     <!-- <div class="menu">Menu</div> -->
     <div class="main">
       <router-outlet></router-outlet>
+
+      <!-- <ngb-tabset #t="ngbTabset">
+        <ngb-tab id="tab-selectbyid1" title="GET USER DATA">
+            <ng-template ngbTabContent>
+                <app-get-user></app-get-user>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab id="tab-selectbyid2" title="POST USER DATA">
+            <ng-template ngbTabContent>
+                <app-post-user></app-post-user>
+            </ng-template>
+        </ngb-tab>
+     </ngb-tabset> -->
+
     </div>  
     <footer class="footer">Footer</footer>
   </div>

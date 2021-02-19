@@ -1,42 +1,46 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
-    <h1 *ngIf="isAddMode">Register</h1>
-    <h1 *ngIf="!isAddMode">Edit User</h1>
-        <label for="first_name">First Name</label>
-        <input type="text" formControlName="first_name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.first_name.errors }" />
-        <div *ngIf="submitted && f.first_name.errors" class="error">
-            <div *ngIf="f.first_name.errors.required">First Name is required</div>
-        </div>
-        <label for="last_name">Last Name</label>
-        <input type="text" formControlName="last_name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.last_name.errors }" />
-        <div *ngIf="submitted && f.last_name.errors" class="error">
-            <div *ngIf="f.last_name.errors.required">Last Name is required</div>
-        </div>
+<div class="panel form-block">
+    <div class="panel-heading">Register</div>
+    <div class="panel-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+            <label for="first_name">First Name</label>
+            <input type="text" formControlName="first_name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.first_name.errors }" />
+            <div *ngIf="submitted && f.first_name.errors" class="error">
+                <div *ngIf="f.first_name.errors.required">First Name is required</div>
+            </div>
+            <label for="last_name">Last Name</label>
+            <input type="text" formControlName="last_name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.last_name.errors }" />
+            <div *ngIf="submitted && f.last_name.errors" class="error">
+                <div *ngIf="f.last_name.errors.required">Last Name is required</div>
+            </div>
 
-        <label for="email">Email</label>
-        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-        <div *ngIf="submitted && f.email.errors" class="error">
-            <div *ngIf="f.email.errors.required">Email is required</div>
-            <div *ngIf="f.email.errors.email">Email is invalid.</div>
-            <div *ngIf="f.email.errors.uniqueEmail">Email is already exist</div>
-        </div>
-        <label for="password">
-            Password
-            <em *ngIf="!isAddMode">(Leave blank to keep the same password)</em>
-        </label>
-        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-        <div *ngIf="submitted && f.password.errors" class="error">
-            <div *ngIf="f.password.errors.required">Password is required</div>
-            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
-        </div>
-        <label for="confirm_password">
-            Confirm Password
-        </label>
-        <input type="password" formControlName="confirm_password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }"/>
-        <div *ngIf="submitted && f.confirm_password.errors" class="error">
-            <div *ngIf="f.confirm_password.errors.required">Confirm Password is required</div>
-            <div *ngIf="f.confirm_password.errors.comparePasswords">Password & Confirm Password does not matched.</div>
-        </div>
-        
-        <button [disabled]="loading" class="btn btn-primary">Register</button>
-        <a routerLink="/users/login" class="btn btn-link">Login</a>
-</form>
+            <label for="email">Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="error">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email is invalid.</div>
+                <div *ngIf="isAddMode && f.email.errors.uniqueEmail">Email is already exist</div>
+            </div>
+            <label for="password" *ngIf="isAddMode">
+                Password
+                <em *ngIf="!isAddMode">(Leave blank to keep the same password)</em>
+            </label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" *ngIf="isAddMode" />
+            <div *ngIf="isAddMode && submitted && f.password.errors" class="error">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+            <label for="confirm_password" *ngIf="isAddMode">
+                Confirm Password
+            </label>
+            <input type="password" formControlName="confirm_password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }" *ngIf="isAddMode"/>
+            <div *ngIf="isAddMode && submitted && f.confirm_password.errors" class="error">
+                <div *ngIf="f.confirm_password.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.confirm_password.errors.comparePasswords">Password & Confirm Password does not matched.</div>
+            </div>
+            
+            <button [disabled]="loading" class="btn" *ngIf="isAddMode">Register</button>
+            <button [disabled]="loading" class="btn" *ngIf="!isAddMode">Update</button>
+            <a routerLink="/users/login" class="btn-link" *ngIf="isAddMode">Login</a>
+        </form>
+    </div>
+</div>

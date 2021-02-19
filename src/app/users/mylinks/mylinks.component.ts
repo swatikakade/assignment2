@@ -9,23 +9,25 @@ import { LinkService } from 'src/app/_services/link.service';
 })
 export class MylinksComponent implements OnInit {
   linkArray : any = [];
-  constructor(private httpClient: HttpClient, private linkSerive: LinkService) { }
+  currentUser: any;
+  currentUserId: any; 
+  constructor(private httpClient: HttpClient, private linkService: LinkService) { }
 
   ngOnInit(): void {
+    this.currentUser = localStorage.getItem("currentUser")?JSON.parse(localStorage.getItem("currentUser")):null;
+    this.currentUserId = this.currentUser.id;
     this.getDataList();
   }
 
   getDataList(){
-    this.httpClient.get("http://localhost:3000/links?user_id=2").subscribe(data =>{
+    this.httpClient.get("http://localhost:3000/links?user_id="+this.currentUserId).subscribe(data =>{
       this.linkArray = data;
     });
   }
 
   confirmDeleteLink(id){
-    alert(id);
     if(confirm("Are you sure to delete link?")) {
-      alert(id);
-      this.linkSerive.delete(id).subscribe((result) => {
+      this.linkService.deleteLink(id).subscribe((result) => {
         console.log(result);
         this.getDataList();
       }, (error) => {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Link } from '../_models/link';
@@ -9,36 +9,30 @@ import { Link } from '../_models/link';
   providedIn: 'root'
 })
 export class LinkService {
-  private linkSubject: BehaviorSubject<Link>;
-  public link: Observable<Link>;
+  private baseURL: string;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient
-  ) {
+  constructor(public http: HttpClient) {
+    this.baseURL = "http://localhost:3000";
   }
 
-  public get linkValue(): Link {
-      return this.linkSubject.value;
+  getlinks(): Observable<Link[]> {
+    return this.http.get<Link[]>(`${this.baseURL}/links`);
   }
 
-  getById(id: string) {
-      return this.http.get<Link>(`http://localhost:3000/links/${id}`);
+  getLink(id: string): Observable<Link> {
+    return this.http.get<Link>(`${this.baseURL}/links/${id}`)
+    .pipe(map(data => { return data; }));
   }
 
-  getAll() {
-      return this.http.get<Link[]>(`http://localhost:3000/links`);
+  createLink(model: Link): Observable<Link> {
+    return this.http.post<Link>(`${this.baseURL}/links`, model);
   }
 
-  add(link: Link) {
-      return this.http.post(`http://localhost:3000/links`, link);
+  updateLink(id: string | number, update: Partial<Link>): Observable<Link> {
+    return this.http.put<Link>(`${this.baseURL}/links/${id}`, update);
   }
 
-  update(id, params) {
-      return this.http.put(`http://localhost:3000/links/${id}`, params);
-  }
-
-  delete(id: string) {
-      return this.http.delete(`http://localhost:3000/links/${id}`);
+  deleteLink(id: any) {
+    return this.http.delete(`${this.baseURL}/links/${id}`);
   }
 }

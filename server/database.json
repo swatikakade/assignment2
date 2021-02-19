@@ -1,32 +1,44 @@
 {
   "links": [
     {
-      "title": "Google News",
-      "description": "Google News is a news aggregator service developed by Google. It presents a continuous flow of articles organized from thousands of publishers and magazines. Google News is available as an app on Android, iOS, and the Web. Google released a beta version in September 2002 and the official app in January 2006. Wikipedia",
-      "link": "https://news.google.com",
-      "category": "NEWS",
+      "title": "Google Newss",
+      "description": "Google News is a news aggregator service developed by Google. It presents a continuous flow of articles organized from thousands of publishers and magazines. Google News is available as an app on Android, iOS, and the Web. Google released a beta version in September 2002 and the official app in January 2006.",
+      "link": "https://news.googles.com",
+      "category": "Technology",
       "user_id": 2,
       "id": 1
     },
     {
-      "id": 2,
       "title": "Food",
       "description": "Cooking or cookery is the art, science, and craft of using heat to prepare food for consumption. Cooking techniques and ingredients vary widely across the world, from grilling food over an open fire to using electric stoves, to baking in various types of ovens, reflecting unique environmental, economic, and cultural traditions and trends.",
       "link": "https://en.wikipedia.org/wiki/Cooking",
-      "category": "cooking",
-      "user_id": 3
+      "category": "Food",
+      "user_id": 3,
+      "id": 2
     },
     {
-      "id": 3,
       "title": "Technology",
       "description": "Technology is the sum of techniques, skills, methods, and processes used in the production of goods or services or in the accomplishment of objectives, such as scientific investigation. Wikipedia",
       "link": "https://en.wikipedia.org/wiki/Technology",
-      "category": "technology",
-      "user_id": 4
+      "category": "Technology",
+      "user_id": 4,
+      "id": 3
     },
     {
-      "email": "hhh@gmail.com",
-      "id": 4
+      "title": "Pizza",
+      "description": "Pizza is a savory dish of Italian origin consisting of a usually round, flattened base of leavened wheat-based dough topped with tomatoes, cheese, and often various other ingredients (such as anchovies, mushrooms, onions, olives, pineapple, meat, etc.), which is then baked at a high temperature, traditionally in a wood-fired oven.\n",
+      "link": "http://www.pizza.com",
+      "category": "Food",
+      "user_id": 7,
+      "id": 5
+    },
+    {
+      "title": "Coffeee",
+      "description": "Coffee is a brewed drink prepared from roasted coffee beans, the seeds of berries from certain Coffea species. When coffee berries turn from green to bright red in color – indicating ripeness – they are picked, processed, and dried. Dried coffee seeds (referred to as \"beans\") are roasted to varying degrees, depending on the desired flavor.\n",
+      "link": "http://www.drinkcoffee.com",
+      "category": "Food",
+      "user_id": 7,
+      "id": 6
     }
   ],
   "users": [
@@ -62,6 +74,27 @@
       "first_name": "swati",
       "last_name": "kakde",
       "id": 6
+    },
+    {
+      "email": "skv@gmail.com",
+      "password": "$2a$10$vmWSiPsnLJ6PVsQdc6DgKeuM4TVgrEh7xOtnX0zndFnNmAcehONlm",
+      "first_name": "sk",
+      "last_name": "v",
+      "id": 7
+    },
+    {
+      "email": "test@gmail.com",
+      "password": "$2a$10$MSNMNvPaTFMrTW37Wkl1/OtBKwAXnAekofa7m6w51rhf.NUlLk7Bq",
+      "first_name": "user",
+      "last_name": "test",
+      "id": 10
+    },
+    {
+      "email": "ug@gmail.com",
+      "password": "$2a$10$9PZQlXEUmf632s/RjeCnF.FBQr982Y7.n665yrb5px6XrvqVBo5Ue",
+      "first_name": "umesh",
+      "last_name": "g",
+      "id": 11
     }
   ]
 }

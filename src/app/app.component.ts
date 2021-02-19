@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { User } from './_models/user';
 import { UserService } from './_services/user.service';
+import { ThemeService } from "src/app/_theme/theme.service";
+import { Store } from '@ngrx/store';
+import { AppState } from './_store/app.state';
+import { logout } from './_store/actions/users.actions';
 
 @Component({
   selector: 'app-root',
@@ -12,23 +17,25 @@ export class AppComponent {
   public show:boolean = false;
   title = 'assignment2';
   currentUser:any;
-  constructor(private router: Router, private userService: UserService) {}
+  user: User;
+  constructor(private router: Router, private userService: UserService, private themeService: ThemeService, private store: Store<AppState>) {}
 
   ngOnInit(){
-    this.userService.isAuthorized();
+    // this.userService.user.subscribe(x => this.user = x);
+    // this.currentUser = sessionStorage.getItem("currentUser")?JSON.parse(sessionStorage.getItem("currentUser")):null;
   }
 
-  toggle() {
-    this.show = !this.show;
-    if (this.show) {
-      this.className = 'dark'
+  get isLoggedIn() { return this.userService.isAuthorized(); }
+
+  toggleTheme() {
+    if (this.themeService.isDarkTheme()) {
+      this.themeService.setLightTheme();
     } else {
-      this.className = 'light';
+      this.themeService.setDarkTheme();
     }
   }
 
-  logout() {
-    this.userService.logout();
-    this.router.navigate(['/login']);
+  onLogout(event: Event) {
+    this.store.dispatch(logout());
   }
 }

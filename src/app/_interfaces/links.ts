@@ -1,5 +1,5 @@
-export class Link {
-    id: number;
+export interface Link {
+    id: string;
     title: string;
     description: string;
     link: string;

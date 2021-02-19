@@ -3,9 +3,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
+import { Store } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
+import { addUser, loadUser, updateUser } from '../../_store/actions/users.actions';
+import { LinkState, linksFeatureKey } from '../../_store/reducers/links.reducers';
+import { selectedUser } from 'src/app/_store/selectors/users.selectors';
 import { UserService } from '../../_services/user.service';
 import { ValidatorService } from '../../_services/validator.service';
 import * as bcrypt from 'bcryptjs';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-add-edit',
@@ -14,7 +20,7 @@ import * as bcrypt from 'bcryptjs';
 })
 export class AddEditComponent implements OnInit {
 
-  form: FormGroup;
+    form: FormGroup;
     id: string;
     isAddMode: boolean;
     loading = false;
@@ -25,41 +31,47 @@ export class AddEditComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private userService: UserService,
-        private validatorService: ValidatorService
+        private validatorService: ValidatorService,
+        private store: Store<LinkState>
     ) {}
 
     ngOnInit() {
         
         this.id = this.route.snapshot.params['id'];
         this.isAddMode = !this.id;
-
-        if (this.isAddMode) {
-            this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (this.isAddMode) { // add mode
+            this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
             if(this.currentUser){
                 this.router.navigate(['/']);
             }
-        }
-        
-        // password not required in edit mode
-        const passwordValidators = [Validators.minLength(6)];
-        if (this.isAddMode) {
+            // password not required in edit mode
+            const passwordValidators = [Validators.minLength(6)];
             passwordValidators.push(Validators.required);
-        }
+            this.form = this.formBuilder.group({
+                first_name: ['', Validators.required],
+                last_name: ['', Validators.required],
+                email:  [null, [Validators.required, Validators.email], [this.validatorService.uniqueEmailValidator()], {updateOn: 'blur'}],
+                password: ['', passwordValidators],
+                confirm_password: [null, Validators.required]
+            }, {
+                validators: [this.validatorService.compareValidator('confirm_password', 'password')]
+            });
+        }else{  // edit mode
+            //validation
+            this.form = this.formBuilder.group({
+                first_name: ['', Validators.required],
+                last_name: ['', Validators.required],
+                email:  [null, [Validators.required, Validators.email]]
+            });
 
-        this.form = this.formBuilder.group({
-            first_name: ['', Validators.required],
-            last_name: ['', Validators.required],
-            email:  [null, [Validators.required, Validators.email], [this.validatorService.uniqueEmailValidator()], {updateOn: 'blur'}],
-            password: ['', passwordValidators],
-            confirm_password: [null, Validators.required]
-        }, {
-            validators: [this.validatorService.compareValidator('confirm_password', 'password')]
-        });
-
-        if (!this.isAddMode) {
-            this.userService.getById(this.id)
-                .pipe(first())
-                .subscribe(x => this.form.patchValue(x));
+            //get user values
+            this.store.dispatch(loadUser({ id: this.id }));
+            this.store.select(selectedUser).subscribe(user => {
+                if (user != null) {
+                this.form.patchValue(user);
+                }
+            });
         }
     }
 
@@ -69,7 +81,6 @@ export class AddEditComponent implements OnInit {
     onSubmit() {
         this.submitted = true;
         // reset alerts on submit
-      
 
         // stop here if form is invalid
         if (this.form.invalid) {
@@ -77,44 +88,18 @@ export class AddEditComponent implements OnInit {
         }
 
         this.loading = true;
+        
         if (this.isAddMode) {
-            this.createUser();
+            // add
+            this.store.dispatch(addUser({ User: this.form.value }));
+            this.router.navigate['/users/login'];
         } else {
-            this.updateUser();
+            // edit
+            const update: Update<User> = {
+                id: this.id,
+                changes: this.form.value
+            };
+            this.store.dispatch(updateUser({ User: update }));
         }
     }
-
-    private createUser() {
-        // const salt = bcrypt.genSaltSync(10);
-        // this.form.value.password = bcrypt.hashSync(this.form.value.password, salt);
-        delete this.form.value.confirm_password;
-        this.userService.register(this.form.value)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    alert('User added successfully');
-                    this.router.navigate(['../login'], { relativeTo: this.route });
-                },
-                error: error => {
-                    console.log(error);
-                    this.loading = false;
-                }
-            });
-    }
-
-    private updateUser() {
-        this.userService.update(this.id, this.form.value)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    alert('Update successful');
-                    this.router.navigate(['../../'], { relativeTo: this.route });
-                },
-                error: error => {
-                    console.log(error);
-                    this.loading = false;
-                }
-            });
-    }
-
 }

@@ -1,96 +1,88 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { User } from '../_models/user';
+
+import { catchError, tap, map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private userSubject: BehaviorSubject<User>;
-    public user: Observable<User>;
+  private baseURL: string;
+  userSubject:any;
+  user:any;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
-        this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
-        this.user = this.userSubject.asObservable();
-    }
+  constructor(public http: HttpClient) {
+    this.baseURL = "http://localhost:3000";
+  }
 
-    public get userValue(): User {
-        return this.userSubject.value;
-    }
+  public get userValue(): User {
+    return this.userSubject.value;
+  }
 
-    login(email: string, password: string) {
-        return this.http.post<any>(`http://localhost:3000/login`, { email, password })
-            .pipe(map(user => {
-                console.log(user);
-                alert();
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.userSubject.next(user);
-                return user;
-            }));
-    }
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseURL}/users`);
+  }
 
-    logout() {
-        // remove user from local storage and set current user to null
-        localStorage.removeItem('currentUser');
-        this.userSubject.next(null);
-    }
+  getUser(id: string): Observable<User> {
+    return this.http.get<User>(`${this.baseURL}/users/${id}`)
+    .pipe(map(data => { return data; }));
+  }
 
-    register(user: User) {
-        return this.http.post(`http://localhost:3000/register`, user);
-    }
+  createUser(model: User): Observable<User> {
+    return this.http.post<User>(`${this.baseURL}/users`, model);
+  }
 
-    isAuthorized(){
-        var currentUser = sessionStorage.getItem("currentUser")?JSON.parse(sessionStorage.getItem("currentUser")):null;
-        if(currentUser){
-        return true;
-        }else{
-        return false;
-        }
-    }
+  updateUser(id: string | number, update: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.baseURL}/users/${id}`, update);
+  }
 
-    getAll() {
-        return this.http.get<User[]>(`http://localhost:3000/users`);
-    }
+  deleteUser(id: any) {
+    return this.http.delete(`${this.baseURL}/users/${id}`);
+  }
 
-    getById(id: string) {
-        return this.http.get<User>(`http://localhost:3000/users/${id}`);
-    }
+  getUserByEmail(email: string) {
+    //return this.http.get<User>(`${this.baseURL}/users?email=${email}`)
+    //.pipe(map(data => { return data; }));
+    return this.http.get<User>(`${this.baseURL}/users?email=${email}`);
+  }
 
-    getUserByEmail(email: string) {
-        return this.http.get<User>(`http://localhost:3000/users?email=${email}`);
-    }
+  login(email: string, password: string) {
+      return this.http.post<User>(`${this.baseURL}/login`, { email, password })
+      .pipe(map(response => {
+        return response;
+          // store user details and jwt token in local storage to keep user logged in between page refreshes
+          //console.log(data);
+          // var user = {};
+          // if(data != null){
+          //     this.http.get(`${this.baseURL}/users?email=`+email).subscribe(data =>{
+          //         if(data != null && data[0] != null) { 
+          //             user = data[0];
+          //             //sessionStorage.setItem('currentUser', JSON.stringify(user)); 
+          //             console.log(user);
+          //             return user;
+          //         }
+          //     });
+          //     return user;
+          // }
+      }));
+  }
 
-    update(id, params) {
-        return this.http.put(`http://localhost:3000/users/${id}`, params)
-            .pipe(map(x => {
-                // update stored user if the logged in user updated their own record
-                if (id == this.userValue.id) {
-                    // update local storage
-                    const user = { ...this.userValue, ...params };
-                    localStorage.setItem('user', JSON.stringify(user));
+  logout() {
+      sessionStorage.removeItem('currentUser');
+      //this.userSubject.next(null);
+  }
+  
+  isAuthorized(){
+      var currentUser = sessionStorage.getItem("currentUser")?JSON.parse(sessionStorage.getItem("currentUser")):null;
+      if(currentUser){
+          return true;
+      }else{
+          return false;
+      }
+  }
 
-                    // publish updated user to subscribers
-                    this.userSubject.next(user);
-                }
-                return x;
-            }));
-    }
-
-    delete(id: string) {
-        return this.http.delete(`http://localhost:3000/users/${id}`)
-            .pipe(map(x => {
-                // auto logout if the logged in user deleted their own record
-                if (id == this.userValue.id) {
-                    this.logout();
-                }
-                return x;
-            }));
-    }
 }
